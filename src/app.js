@@ -1,14 +1,25 @@
 const express = require("express");
-const connectDB = require("./config/db");
-const routes = require("./routes");
+const routes = require("./routes/index");
+const { connectDB } = require("./config/db");
+require("dotenv").config();
 
 const app = express();
-connectDB();
 
 app.use(express.json());
-app.use("/", routes);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+// Conectar ao MongoDB
+const uri = process.env.MONGO_URI;
+connectDB(uri);
+
+// Usar as rotas definidas
+app.use(routes);
+
+// Inicializar o servidor apenas se não for o ambiente de teste
+if (process.env.NODE_ENV !== "test") {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+  });
+}
+
+module.exports = app;

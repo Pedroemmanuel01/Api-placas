@@ -24,7 +24,6 @@ exports.cadastrarPlaca = async (req, res) => {
       }
     );
 
-    // Extraindo a placa do resultado OCR
     const placa = response.data.ParsedResults[0].ParsedText.trim();
 
     const novoRegistro = new Registro({ placa, cidade });

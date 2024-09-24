@@ -1,14 +1,22 @@
 const mongoose = require("mongoose");
-require("dotenv").config();
 
 const connectDB = async () => {
+  const uri = process.env.MONGO_URI;
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(uri);
     console.log("MongoDB conectado com sucesso");
-  } catch (err) {
-    console.error("Erro ao conectar ao MongoDB", err);
-    process.exit(1);
+  } catch (error) {
+    console.error("Erro ao conectar com MongoDB:", error);
   }
 };
 
-module.exports = connectDB;
+const disconnectDB = async () => {
+  try {
+    await mongoose.connection.close();
+    console.log("MongoDB desconectado com sucesso");
+  } catch (error) {
+    console.error("Erro ao desconectar MongoDB:", error);
+  }
+};
+
+module.exports = { connectDB, disconnectDB };
